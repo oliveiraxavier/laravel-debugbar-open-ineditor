@@ -16,7 +16,13 @@ Move mouse pointer to text that contains file path, then the button will appear.
 Require this package with composer. It is recommended to only require the package for development.
 
 ```shell
-composer require erlangparasu/laravel-debugbar-vscode:"3.x-dev" --dev
+composer require oliveiraxavier/laravel-debugbar-open-ineditor --dev
+```
+
+In .env file set your preferred text editor or IDE (phpstorm | vscode | vscodium | etc)
+
+```shell
+DEBUGBAR_EDITOR=vscodium
 ```
 
 ### Laravel 5.5+:
@@ -38,3 +44,5 @@ if (env('APP_DEBUG')) {
     $app->register(ErlangParasu\DebugbarVscode\LumenServiceProvider::class);
 }
 ```
+
+All credits to https://github.com/erlangparasu/laravel-debugbar-vscode
