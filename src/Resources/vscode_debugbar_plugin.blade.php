@@ -1,24 +1,7 @@
 <style>
-    .phpdebugbar-widgets-list-item {
-        align-items: baseline !important;
-    }
-
-    .phpdebugbar-plugin-vscodebutton {
-        font-size: 12px !important;
-        display: inline-block !important;
-        color: #000 !important;
-        border: 1px solid #9d9090 !important;
-        border-radius: 3px !important;
-        box-shadow: 0px 2px 3px #00000069 !important;
-        padding-left: 8px !important;
-        padding-right: 8px !important;
-        padding-top: 4px !important;
-        padding-bottom: 4px !important;
-        margin-left: 8px !important;
-        margin-right: 4px !important;
-        margin-bottom: 0px !important;
-        cursor: pointer !important;
-    }
+    .phpdebugbar-widgets-list-item {align-items: baseline !important;}
+    .phpdebugbar-plugin-vscodebutton {font-size: 12px !important;display: inline-block !important;color: #3f6ad8 !important;padding-top: 4px !important;margin-left: 8px !important;margin-right: 4px !important;cursor: pointer !important;}
+    .phpdebugbar-plugin-vscodebutton:hover { color: #3c64cb !important; font-size: 1.0111em !important;}
 </style>
 <?php $isLinux = DIRECTORY_SEPARATOR === '/'; ?>
 <script>
@@ -77,7 +60,7 @@
 
         $(function onDocumentReady() {
             function getSchemeName() {
-                return "{{ 'vscode' }}";
+                return "{{ $editorName }}";
             }
 
             function getBasePath() {
@@ -93,7 +76,7 @@
             }
 
             function isBlade(str) {
-                return str.indexOf('.blade.php') != -1;
+                return str.indexOf('.blade.php') != -1 && str.indexOf('vscode_debugbar_plugin.blade.php') == -1 
             }
 
             function getLink(str) {
@@ -101,6 +84,7 @@
 
                 result += getSchemeName();
                 result += '://file/';
+                
                 result += getBasePath();
 
                 if (isBlade(str)) {
@@ -124,7 +108,8 @@
                     var iRes = str.indexOf('.php:');
                     if (iRes != -1) {
                         var iLastDash = str.lastIndexOf('-');
-                        result += str.substring(0, iLastDash);
+                        var iFirstSignal = str.indexOf('>') + 1;
+                        result += str.substring(iFirstSignal, iLastDash);
                     }
                 }
 
@@ -133,7 +118,7 @@
 
             var funOnHoverIn = function (e) {
                 e.stopPropagation();
-
+                
                 var str = $(this).html();
                 if (isPhp(str) || isBlade(str) || isController(str)) {
                     // OK
@@ -150,21 +135,26 @@
                 }
 
                 var strFullPath = getLink(str);
+                var prefEditor = getSchemeName();
 
                 if (isBlade(str)) {
                     var oldHtml = $(this).parent().html();
                     var strNewLink = '';
+                    
                     if (oldHtml.indexOf('phpdebugbar-plugin-vscodebutton') == -1) {
-                        strNewLink = '<a class="phpdebugbar-plugin-vscodebutton" onclick="phpdebugbar_plugin_onBtnVscodeClicked(event, this);" data-link="' + strFullPath + '" title="' + strFullPath + '">' +  '&#9998;' +  '</a>';
+                        strNewLink = '<a class="phpdebugbar-plugin-vscodebutton" onclick="phpdebugbar_plugin_onBtnVscodeClicked(event, this);" data-link="' + strFullPath + '" title="' + strFullPath + '">View in ' + prefEditor + ' </a>';
                     }
+                    
                     $(strNewLink).insertAfter($(this));
+                    
                 } else if (isController(str)) {
-                    var oldHtml = $(this).html();
+                    var oldHtml = $(this).html();                    
                     var strNewLink = '';
+                    
                     if (oldHtml.indexOf('phpdebugbar-plugin-vscodebutton') == -1) {
-                        strNewLink = '<a class="phpdebugbar-plugin-vscodebutton" onclick="phpdebugbar_plugin_onBtnVscodeClicked(event, this);" data-link="' + strFullPath + '" title="' + strFullPath + '">' +  '&#9998;' +  '</a>';
+                        strNewLink = '<a class="phpdebugbar-plugin-vscodebutton" onclick="phpdebugbar_plugin_onBtnVscodeClicked(event, this);" data-link="' + strFullPath + '"  title="' + strFullPath + '">' +  '&#9998;' +   '</a>';
+                        $(this).find('a').attr('href', strFullPath)
                     }
-                    $(strNewLink).appendTo($(this));
                 }
             };
 
@@ -174,10 +164,17 @@
 
             $('.phpdebugbar span.phpdebugbar-widgets-name').hover(funOnHoverIn, funOnHoverOut);
             $('.phpdebugbar dd.phpdebugbar-widgets-value').hover(funOnHoverIn, funOnHoverOut);
+            
+            $('.phpdebugbar span.phpdebugbar-widgets-name').each(function() {
+                $(this).mouseover()
+            });
+
+            $('.phpdebugbar dd.phpdebugbar-widgets-value').each(function() {
+                $(this).mouseover()
+            });
+                
         });
 
-        // phpdebugbar_plugin_vscode_mIsLoaded = true;
-        // clearInterval(phpdebugbar_plugin_vscode_mInterval);
     }
 
     var phpdebugbar_plugin_vscode_mInterval = setInterval(phpdebugbar_plugin_vscode_onInit, 2000);
