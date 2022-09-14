@@ -81,7 +81,8 @@ class LaravelDebugbarVscode extends ServiceProvider
         $content = $response->getContent();
 
         $this->loadViewsFrom(__DIR__ . '/Resources', 'debugbarvscode');
-        $renderer = view('debugbarvscode::vscode_debugbar_plugin');
+        $editorName = env('DEBUGBAR_EDITOR', 'vscode');
+        $renderer = view('debugbarvscode::vscode_debugbar_plugin', compact('editorName'));
         $renderedContent = $renderer->render();
 
         if (strpos($content, 'PhpDebugBar.') !== false) {
