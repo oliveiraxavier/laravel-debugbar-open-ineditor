@@ -6,9 +6,13 @@ This package code is based on https://github.com/barryvdh/laravel-debugbar
 
 ## How to use
 
-Move mouse pointer to text that contains file path, then the button will appear. Click to open the path in vscode :D
+Click on the link (View in vscodium) as below :D
 
 ![Screenshot 1](screenshots/laravel-debugbar-vscode.screnshot-1.png)
+
+Click on the link (
+app/Http/Controllers/HomeController.php:231-234) as below :D
+
 ![Screenshot 2](screenshots/laravel-debugbar-vscode.screnshot-2.png)
 
 ## Installation
